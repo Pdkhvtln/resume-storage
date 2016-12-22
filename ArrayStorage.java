@@ -2,23 +2,20 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    final int storageMaxLenth = 10000;
-    Resume[] storage = new Resume[storageMaxLenth];
+    private final int storageMaxLenth = 10000;
+    private Resume[] storage = new Resume[storageMaxLenth];
     private int sizeArray = 0;
 
     private int getIndex(String uuid) {
-        for (int i = 0; i < sizeArray; i++) {
-            if (storage[i].uuid.equals(uuid))
-                return i;
-        }
+            for (int i = 0; i < sizeArray; i++) {
+                if (uuid.equals(storage[i].uuid))
+                    return i;
+            }
         return -1;
     }
 
     private boolean isOverflow() {
-        if (sizeArray == storageMaxLenth)
-            return true;
-        else
-            return false;
+        return (sizeArray == storageMaxLenth);
     }
 
     void clear() {
@@ -28,17 +25,15 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        if (!isOverflow()) {
+        if (isOverflow())
             System.out.println("Извините места в хранилище больше нет!");
-            return;
-        }
-        int index = getIndex(r.uuid);
-        if (index < 0) {
-            storage[sizeArray] = r;
-            sizeArray++;
-        } else {
-            System.out.println("Резюме с " + r + " уже есть!");
-            return;
+        else {
+            int index = getIndex(r.uuid);
+            if (index < 0) {
+                storage[sizeArray] = r;
+                sizeArray++;
+            } else
+                System.out.println("Резюме с " + r + " уже есть!");
         }
     }
 
@@ -54,24 +49,19 @@ public class ArrayStorage {
     void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {//резюме найдено, возвращаем результат
-            for (int i = index; i < sizeArray - 1; i++)
-                storage[i] = storage[i + 1];
-            sizeArray--;
-            System.out.println("Удаляемое резюмес uuid = " + uuid + " удалено из хранилища.");
+            System.arraycopy(storage, index + 1, storage, index, --sizeArray - index);
+            System.out.println("Удаляемое резюме с uuid = " + uuid + " удалено из хранилища.");
         } else
-            System.out.println("Удаляемое резюмес uuid = " + uuid + " не было обнаружено в хранилище.");
+            System.out.println("Удаляемое резюме с uuid = " + uuid + " не было обнаружено в хранилище.");
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        if (sizeArray > 0) {
-            Resume[] res = new Resume[sizeArray];
-            for (int i = 0; i < sizeArray; i++)
-                res[i] = storage[i];
-        }
-        return null;
+        Resume[] res = new Resume[sizeArray];
+        System.arraycopy(storage, 0, res, 0, sizeArray);
+        return res;
     }
 
     int size() {
