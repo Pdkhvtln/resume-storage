@@ -2,15 +2,8 @@ import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 	// write your code here
-        String arg[] = {"save", "uuid1"};
-
-
-        try {
-            MainArray.main(arg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            MainArray.main(args);
     }
 }
