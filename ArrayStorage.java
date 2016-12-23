@@ -7,6 +7,7 @@ public class ArrayStorage {
     private int sizeArray = 0;
 
     private int getIndex(String uuid) {
+        if (uuid != null)
             for (int i = 0; i < sizeArray; i++) {
                 if (uuid.equals(storage[i].uuid))
                     return i;
@@ -27,14 +28,15 @@ public class ArrayStorage {
     void save(Resume r) {
         if (isOverflow())
             System.out.println("Извините места в хранилище больше нет!");
-        else {
+        else if ((r != null) && (r.uuid != null)) {
             int index = getIndex(r.uuid);
             if (index < 0) {
                 storage[sizeArray] = r;
                 sizeArray++;
             } else
                 System.out.println("Резюме с " + r + " уже есть!");
-        }
+        } else
+            System.out.println("Невозможно добавить в хранилищ null значение!");
     }
 
     Resume get(String uuid) {
