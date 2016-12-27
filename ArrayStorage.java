@@ -28,7 +28,7 @@ public class ArrayStorage {
     void save(Resume r) {
         if (isOverflow())
             System.out.println("Извините места в хранилище больше нет!");
-        else if ((r != null) && (r.uuid != null)) {
+        else if (Resume.isResume(r)) {
             int index = getIndex(r.uuid);
             if (index < 0) {
                 storage[sizeArray] = r;
@@ -36,7 +36,7 @@ public class ArrayStorage {
             } else
                 System.out.println("Резюме с " + r + " уже есть!");
         } else
-            System.out.println("Невозможно добавить в хранилищ null значение!");
+            System.out.println("Невозможно добавить в хранилище null значение!");
     }
 
     Resume get(String uuid) {
@@ -68,5 +68,16 @@ public class ArrayStorage {
 
     int size() {
         return sizeArray;
+    }
+
+    void update(Resume r) {
+        if (Resume.isResume(r)) {
+            int index = getIndex(r.uuid);
+            if (index < 0) {
+                storage[index] = r;
+            } else
+                System.out.println("Резюме с " + r + " уже есть!");
+        } else
+            System.out.println("Невозможно изменить резюме которого не существует(null)!");
     }
 }

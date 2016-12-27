@@ -6,6 +6,10 @@ public class Resume {
     // Unique identifier
     String uuid;
 
+    public static boolean isResume(Resume r){
+        return ((r != null) && (r.uuid != null));
+    }
+
     @Override
     public String toString() {
         return uuid;

@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+
 /**
  * Test for com.urise.webapp.storage.ArrayStorage
  */
@@ -29,10 +31,13 @@ public class MainTestArrayStorage {
         printAll();
         ARRAY_STORAGE.delete(r2.uuid);
         printAll();
-        ARRAY_STORAGE.clear();
-        printAll();
 
-        System.out.println("Size: " + ARRAY_STORAGE.size());
+        ARRAY_STORAGE.update(ARRAY_STORAGE.get("uuid2"));
+        printAll();
+        //ARRAY_STORAGE.clear();
+        //printAll();
+
+        //System.out.println("Size: " + ARRAY_STORAGE.size());
     }
 
     static void printAll() {
