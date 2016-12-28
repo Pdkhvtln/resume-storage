@@ -1,5 +1,3 @@
-package com.urise.webapp;
-
 import java.io.IOException;
 
 public class Main {
