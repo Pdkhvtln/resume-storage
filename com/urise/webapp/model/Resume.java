@@ -3,13 +3,16 @@ package com.urise.webapp.model;
 /**
  * com.urise.webapp.model.com.urise.webapp.model.Resume class
  */
-public class Resume implements Comparable<Resume>{
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private String uuid;
 
     public Resume(String uuid) {
         this.uuid = uuid;
+    }
+
+    public Resume() {
     }
 
     public static boolean isResume(Resume r) {
@@ -48,3 +51,4 @@ public class Resume implements Comparable<Resume>{
     public int compareTo(Resume o) {
         return uuid.compareTo(o.uuid);
     }
+}
