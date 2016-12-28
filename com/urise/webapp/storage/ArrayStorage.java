@@ -12,7 +12,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     private Resume[] storage = new Resume[STORAGE_MAX_LENGTH];
     private int size = 0;
 
-    private int getIndex(String uuid) {
+    protected int getIndex(String uuid) {
         if (uuid != null)
             for (int i = 0; i < size; i++) {
                 if (uuid.equals(storage[i].getUuid()))
@@ -42,15 +42,6 @@ public class ArrayStorage extends AbstractArrayStorage {
                 System.out.println("Резюме с " + r + " уже есть!");
         } else
             System.out.println("Невозможно добавить в хранилище null значение!");
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {//резюме найдено, возвращаем результат
-            return storage[index];
-        }
-        //если резюме с таким uuid нет в БД
-        return null;
     }
 
     public void delete(String uuid) {
