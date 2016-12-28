@@ -1,12 +1,15 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
+
+import java.util.Arrays;
+
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private final int storageMaxLenth = 10000;
-    private Resume[] storage = new Resume[storageMaxLenth];
+    private final int STORAGE_MAX_LENGTH = 10000;
+    private Resume[] storage = new Resume[STORAGE_MAX_LENGTH];
     private int size = 0;
 
     private int getIndex(String uuid) {
@@ -19,12 +22,11 @@ public class ArrayStorage {
     }
 
     private boolean isOverflow() {
-        return (size == storageMaxLenth);
+        return (size == STORAGE_MAX_LENGTH);
     }
 
     public void clear() {
-        for (int i = 0; i < size; i++)
-            storage[i] = null;
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
@@ -64,9 +66,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] res = new Resume[size];
-        System.arraycopy(storage, 0, res, 0, size);
-        return res;
+        return Arrays.copyOfRange(storage,0,size);
     }
 
     public int size() {
