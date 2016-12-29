@@ -9,15 +9,15 @@ public interface Storage {
 
     void clear();
 
-    void save(Resume r);
+    boolean save(Resume r);
 
     Resume get(String uuid);
 
-    void delete(String uuid);
+    boolean delete(String uuid);
 
     Resume[] getAll();
 
     int size();
 
-    void update(Resume r);
+    boolean update(Resume r);
 }

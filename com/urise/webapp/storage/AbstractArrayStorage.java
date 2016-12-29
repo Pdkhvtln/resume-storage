@@ -18,10 +18,10 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index >= 0) {//резюме найдено, возвращаем результат
+        if (index >= 0) {//the resume found
             return storage[index];
         }
-        //если резюме с таким uuid нет в БД
+        //if the resume did not find in storage
         return null;
     }
 
@@ -38,5 +38,25 @@ public abstract class AbstractArrayStorage implements Storage {
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
+    }
+
+    public boolean update(Resume r) {
+        if (Resume.isResume(r)) {
+            int index = getIndex(r.getUuid());
+            if (index >= 0) {//the resume found
+                storage[index] = r;
+                return true;//success
+            }
+        }
+       return false;//failure
+    }
+
+    public boolean delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {//the resume found
+            System.arraycopy(storage, index + 1, storage, index, --size - index);
+            return true;//success
+        }
+        return false;//failure
     }
 }
