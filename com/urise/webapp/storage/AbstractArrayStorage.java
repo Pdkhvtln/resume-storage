@@ -25,12 +25,6 @@ public abstract class AbstractArrayStorage implements Storage {
         return null;
     }
 
-    protected boolean isOverflow() {
-        return (size == STORAGE_MAX_LENGTH);
-    }
-
-    protected abstract int getIndex(String uuid);
-
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
@@ -38,6 +32,27 @@ public abstract class AbstractArrayStorage implements Storage {
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
+    }
+
+    public boolean save(Resume r) {
+        if (isOverflow()) {
+            System.out.println("Извините места в хранилище больше нет!");
+            return false;
+        }
+        if (Resume.isResume(r)) {
+            int index = getIndex(r.getUuid());
+            if (index < 0) {//The resume with such uuid did not find in Storage, will add it
+                if (size == 0)
+                    storage[size] = r;
+                else
+                    insertResume(r, index);
+                size++;
+                return true;//success
+            } else
+                System.out.println("Резюме с " + r + " уже есть!");
+        } else
+            System.out.println("Невозможно добавить в хранилище null значение!");
+        return false;//failure
     }
 
     public boolean update(Resume r) {
@@ -48,15 +63,27 @@ public abstract class AbstractArrayStorage implements Storage {
                 return true;//success
             }
         }
-       return false;//failure
+        return false;//failure
     }
 
     public boolean delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {//the resume found
-            System.arraycopy(storage, index + 1, storage, index, --size - index);
+            eraseResume(index);
+            size--;
+            storage[size] = null;
             return true;//success
         }
         return false;//failure
     }
+
+    protected boolean isOverflow() {
+        return (size == STORAGE_MAX_LENGTH);
+    }
+
+    protected abstract int getIndex(String uuid);
+
+    protected abstract void insertResume(Resume r, int index);
+
+    protected abstract void eraseResume(int index);
 }

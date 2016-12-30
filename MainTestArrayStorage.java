@@ -10,17 +10,17 @@ public class MainTestArrayStorage {
 
     public static void main(String[] args) {
         final Resume r1 = new Resume();
-        r1.setUuid("uuid1");
+        r1.setUuid("uuid6");
         final Resume r2 = new Resume();
         r2.setUuid("uuid2");
         final Resume r3 = new Resume();
-        r3.setUuid("uuid3");
+        r3.setUuid("uuid5");
         final Resume r4 = new Resume();
         r4.setUuid("uuid4");
         final Resume r5 = new Resume();
-        r5.setUuid("uuid5");
+        r5.setUuid("uuid3");
         final Resume r6 = new Resume();
-        r6.setUuid("uuid6");
+        r6.setUuid("uuid1");
 
         ARRAY_STORAGE.save(r4);
         ARRAY_STORAGE.save(r1);
