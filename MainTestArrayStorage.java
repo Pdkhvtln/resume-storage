@@ -30,22 +30,11 @@ public class MainTestArrayStorage {
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
         printAll();
-        if (ARRAY_STORAGE.update(ARRAY_STORAGE.get("uuid222")))
-            System.out.println("Успех. Резюме "+ARRAY_STORAGE.get("uuid222")+" отредактированно.");
-        else
-            System.out.println("Неудача. Резюме "+ARRAY_STORAGE.get("uuid222")+" не было отредактированно.");
+        ARRAY_STORAGE.update(ARRAY_STORAGE.get("uuid222"));
         printAll();
-        if (ARRAY_STORAGE.update(ARRAY_STORAGE.get("uuid2")))
-            System.out.println("Успех. Резюме "+ARRAY_STORAGE.get("uuid2")+" отредактированно.");
-        else
-            System.out.println("Неудача. Резюме "+ARRAY_STORAGE.get("uuid2")+" не было отредактированно.");
-
+        ARRAY_STORAGE.update(ARRAY_STORAGE.get("uuid2"));
         printAll();
-        if(ARRAY_STORAGE.delete(r2.getUuid()))
-            System.out.println("Успех. Резюме "+r2+" удалено.");
-        else
-            System.out.println("Неудача. Резюме "+r2+" не было удалено.");
-
+        ARRAY_STORAGE.delete(r2.getUuid());
         printAll();
         System.out.println("Вызов метода clear.");
         ARRAY_STORAGE.clear();
