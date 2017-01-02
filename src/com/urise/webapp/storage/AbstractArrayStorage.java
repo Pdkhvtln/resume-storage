@@ -33,6 +33,7 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void clear() {
+        if (size>0)
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
@@ -43,9 +44,9 @@ public abstract class AbstractArrayStorage implements Storage {
         if (Resume.isResume(r)) {
             int index = getIndex(r.getUuid());
             if (index < 0) {//The resume with such uuid did not find in Storage, will add it
-/*                if (size == 0)
+                if (size == 0)
                     storage[size] = r;
-                else*/
+                else
                     insertResume(r, index);
                 size++;
             } else
