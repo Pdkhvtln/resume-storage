@@ -33,26 +33,27 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void clear() {
-        if (size>0)
-        Arrays.fill(storage, 0, size, null);
+        if (size > 0)
+            Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void save(Resume r) {
         if (isOverflow()) {
-            throw new StorageException("Storage overflow",r.getUuid());        }
-        if (Resume.isResume(r)) {
-            int index = getIndex(r.getUuid());
-            if (index < 0) {//The resume with such uuid did not find in Storage, will add it
-                if (size == 0)
-                    storage[size] = r;
-                else
-                    insertResume(r, index);
-                size++;
-            } else
-                throw new ExistStorageException(r.getUuid());
+            throw new StorageException("Storage overflow", r.getUuid());
+        }
+        //if (Resume.isResume(r)) {
+        int index = getIndex(r.getUuid());
+        if (index < 0) {//The resume with such uuid did not find in Storage, will add it
+            //if (size == 0)
+            //    storage[size] = r;
+            //else
+            insertResume(r, index);
+            size++;
         } else
-            System.out.println("Невозможно добавить в хранилище null значение!");
+            throw new ExistStorageException(r.getUuid());
+        //} else
+        //    System.out.println("Невозможно добавить в хранилище null значение!");
     }
 
     public void update(Resume r) {
@@ -71,8 +72,7 @@ public abstract class AbstractArrayStorage implements Storage {
             eraseResume(index);
             size--;
             storage[size] = null;
-        }
-        else
+        } else
             throw new NotExistStorageException(uuid);
     }
 
