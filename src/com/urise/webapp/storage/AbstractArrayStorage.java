@@ -42,18 +42,17 @@ public abstract class AbstractArrayStorage implements Storage {
         if (isOverflow()) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        //if (Resume.isResume(r)) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {//The resume with such uuid did not find in Storage, will add it
-            //if (size == 0)
-            //    storage[size] = r;
-            //else
-            insertResume(r, index);
-            size++;
-        } else
-            throw new ExistStorageException(r.getUuid());
-        //} else
-        //    System.out.println("Невозможно добавить в хранилище null значение!");
+        else {
+            if (Resume.isResume(r)) {
+            int index = getIndex(r.getUuid());
+            if (index < 0) {//The resume with such uuid did not find in Storage, will add it
+                insertResume(r, index);
+                size++;
+            } else
+                throw new ExistStorageException(r.getUuid());
+            }// else
+            //    System.out.println("Невозможно добавить в хранилище null значение!");
+        }
     }
 
     public void update(Resume r) {
