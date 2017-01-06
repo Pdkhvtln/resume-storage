@@ -5,19 +5,18 @@ import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Andrey on 06.01.2017.
  */
 public class ListStorage extends AbstractStorage {
-    private List<Resume> list;
+    private Collection<Resume> list;
 
     public ListStorage() {
         list = new ArrayList<Resume>();
     }
-
 
     @Override
     public void clear() {
@@ -36,9 +35,16 @@ public class ListStorage extends AbstractStorage {
     public Resume get(String uuid) {
         Resume r = new Resume(uuid);
         if (list.contains(r)) {
-            return list.get(list.indexOf(r));
+            //return list.get(list.indexOf(r));
+            Iterator<Resume> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                Resume result = iterator.next();
+                if (r.equals(result))
+                    return result;
+            }
         } else
             throw new NotExistStorageException(uuid);
+        return null;
     }
 
     @Override
@@ -70,7 +76,15 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void update(Resume r) {
         if (list.contains(r)) {
-            list.set(list.indexOf(r), r);
+            //list.set(list.indexOf(r), r);
+            Iterator<Resume> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                Resume result = iterator.next();
+                if (r.equals(result)) {
+                    iterator.remove();
+                }
+            }
+            list.add(r);
         } else
             throw new NotExistStorageException(r.getUuid());
     }
