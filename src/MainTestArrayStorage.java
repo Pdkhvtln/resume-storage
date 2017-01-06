@@ -1,13 +1,13 @@
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.MapStorage;
+import com.urise.webapp.storage.ListStorage;
 import com.urise.webapp.storage.Storage;
 
 /**
  * Test for com.urise.webapp.storage.com.urise.webapp.storage.ArrayStorage
  */
 public class MainTestArrayStorage {
-    private final static Storage ARRAY_STORAGE = new MapStorage();//new SortedArrayStorage();
+    private final static Storage ARRAY_STORAGE = new ListStorage();//new SortedArrayStorage();
 
     public static void main(String[] args) {
         final Resume r1 = new Resume("uuid1");
