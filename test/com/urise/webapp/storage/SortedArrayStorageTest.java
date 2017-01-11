@@ -3,7 +3,7 @@ package com.urise.webapp.storage;
 /**
  * Created by Andrey on 02.01.2017.
  */
-public class SortedArrayStorageTest extends AbstractArrayStorageTest{
+public class SortedArrayStorageTest extends ArrayTest {
     public SortedArrayStorageTest() {
         super(new SortedArrayStorage());
     }

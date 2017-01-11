@@ -2,7 +2,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +10,7 @@ import org.junit.Test;
 /**
  * Created by Andrey on 02.01.2017.
  */
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
     protected Storage storage;
 
     protected static final String UUID_1 = "uuid1";
@@ -34,7 +33,7 @@ public abstract class AbstractArrayStorageTest {
         storage.save(RESUME_3);
     }
 
-    public AbstractArrayStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -81,22 +80,6 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = ExistStorageException.class)
     public void saveExist() throws Exception {
         storage.save(RESUME_1);
-    }
-
-    @Test(expected = StorageException.class)
-    public void saveOverflow() throws Exception {
-        final int i=storage.size();
-        System.out.println("size = "+i);
-        try {
-            for (int j = i; j < AbstractArrayStorage.STORAGE_MAX_LENGTH; j++) {
-                storage.save(new Resume());
-                if(storage.size()>9995)
-                    System.out.println(storage.size());
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
-        storage.save(new Resume());
     }
 
     @Test
