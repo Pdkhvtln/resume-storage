@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -10,23 +8,47 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {//Storage {
     protected static final int STORAGE_MAX_LENGTH = 10000;
     protected Resume[] storage = new Resume[STORAGE_MAX_LENGTH];
     protected int size = 0;
+
+    @Override
+    protected void doUpdate(Resume r, Object index) {
+        storage[(Integer) index] = r;
+    }
+
+    @Override
+    protected void doSave(Resume r, Object index) {
+        if (isOverflow()) {
+            throw new StorageException("Storage overflow", r.getUuid());
+        } else {
+            insertResume(r, (Integer) index);
+            size++;
+        }
+    }
+
+    @Override
+    protected void doDelete(Object index) {
+        eraseResume((Integer) index);
+        size--;
+        storage[size] = null;
+    }
+
+    @Override
+    protected Resume doGet(Object index) {
+        return storage[(Integer) index];
+    }
+
+    @Override
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
+    }
 
     public int size() {
         return size;
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {//if the resume did not find in storage
-            throw new NotExistStorageException(uuid);
-        }
-        //the resume found
-        return storage[index];
-    }
 
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
@@ -38,48 +60,12 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void save(Resume r) {
-        if (isOverflow()) {
-            throw new StorageException("Storage overflow", r.getUuid());
-        }
-        else {
-            if (Resume.isResume(r)) {
-            int index = getIndex(r.getUuid());
-            if (index < 0) {//The resume with such uuid did not find in Storage, will add it
-                insertResume(r, index);
-                size++;
-            } else
-                throw new ExistStorageException(r.getUuid());
-            }// else
-            //    System.out.println("Невозможно добавить в хранилище null значение!");
-        }
-    }
-
-    public void update(Resume r) {
-        if (Resume.isResume(r)) {
-            int index = getIndex(r.getUuid());
-            if (index >= 0) {//the resume found
-                storage[index] = r;
-            } else
-                throw new NotExistStorageException(r.getUuid());
-        }
-    }
-
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {//the resume found
-            eraseResume(index);
-            size--;
-            storage[size] = null;
-        } else
-            throw new NotExistStorageException(uuid);
-    }
 
     protected boolean isOverflow() {
         return (size == STORAGE_MAX_LENGTH);
     }
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void insertResume(Resume r, int index);
 
