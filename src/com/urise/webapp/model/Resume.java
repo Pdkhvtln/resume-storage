@@ -11,15 +11,15 @@ public class Resume {
     private final String uuid;
     private final String fullName;
 
-    public Resume(String uuid) {
-        this(uuid,"");
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(),fullName);
     }
     public Resume(String uuid, String fullName) {
         this.uuid = uuid;
         this.fullName = fullName;
     }
     public Resume() {
-        this(UUID.randomUUID().toString());
+        this("");
     }
 
     public static boolean isResume(Resume r) {
@@ -43,11 +43,14 @@ public class Resume {
 
     @Override
     public String toString() {
-        return uuid;
+        return "Uuid: "+uuid+", full name: "+fullName;
     }
 
     public String getUuid() {
         return uuid;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
 }
