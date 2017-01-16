@@ -5,15 +5,19 @@ import java.util.UUID;
 /**
  * com.urise.webapp.model.com.urise.webapp.model.Resume class
  */
-public class Resume{
+public class Resume {
 
     // Unique identifier
     private final String uuid;
+    private final String fullName;
 
     public Resume(String uuid) {
-        this.uuid = uuid;
+        this(uuid,"");
     }
-
+    public Resume(String uuid, String fullName) {
+        this.uuid = uuid;
+        this.fullName = fullName;
+    }
     public Resume() {
         this(UUID.randomUUID().toString());
     }

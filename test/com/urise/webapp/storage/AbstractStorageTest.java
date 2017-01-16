@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * Created by Andrey on 02.01.2017.
  */
@@ -56,11 +58,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAll() throws Exception {
-        Resume[] r = storage.getAll();
-        Assert.assertEquals(3, r.length);
-        Assert.assertEquals(RESUME_1, r[0]);
-        Assert.assertEquals(RESUME_2, r[1]);
-        Assert.assertEquals(RESUME_3, r[2]);
+        List<Resume> r = storage.getAllSorted();
+        Assert.assertEquals(3, r.size());
+        Assert.assertEquals(RESUME_1, r.get(0));
+        Assert.assertEquals(RESUME_2, r.get(1));
+        Assert.assertEquals(RESUME_3, r.get(2));
     }
 
     @Test
@@ -97,17 +99,17 @@ public abstract class AbstractStorageTest {
     @Test
     public void delete() throws Exception {
         int sz = storage.size();
-        Resume[] copyStorage = storage.getAll();
+        List<Resume> copyStorage = storage.getAllSorted();
         storage.delete(UUID_2);
         assertSize(sz - 1);
-        Assert.assertNotEquals(copyStorage, storage.getAll());
+        Assert.assertNotEquals(copyStorage.toArray(), storage.getAllSorted().toArray());
     }
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() throws Exception {
-        Resume[] copyStorage = storage.getAll();
+        List<Resume> copyStorage = storage.getAllSorted();
         storage.delete("dummy");
-        Assert.assertArrayEquals(copyStorage, storage.getAll());
+        Assert.assertArrayEquals(copyStorage.toArray(), storage.getAllSorted().toArray());
     }
 
     private void assertSize(int size) {
