@@ -9,7 +9,6 @@ import java.util.*;
  */
 public class MapUuidStorage extends AbstractStorage {
     private Map<String, Resume> map = new HashMap<>();
-    private static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
     @Override
     public void clear() {
         map.clear();
