@@ -2,31 +2,24 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Andrey on 06.01.2017.
  */
 public class MapUuidStorage extends AbstractStorage {
     private Map<String, Resume> map = new HashMap<>();
-
+    private static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
     @Override
     public void clear() {
         map.clear();
     }
-
     @Override
-    public Resume[] getAll() {
-        Resume[] r = new Resume[map.size()];
-        int i = 0;
-        for (Map.Entry<String, Resume> m : map.entrySet()) {
-            r[i] = m.getValue();
-            i++;
-        }
-        return r;
+    public List<Resume> getAllSorted() {
+        List<Resume> result = new ArrayList<Resume>(map.values());
+        result.sort(RESUME_COMPARATOR);
+        return result;
     }
-
     @Override
     public int size() {
         return map.size();

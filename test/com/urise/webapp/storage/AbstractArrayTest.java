@@ -8,9 +8,9 @@ import org.junit.Test;
 /**
  * Created by Andrey on 12.01.2017.
  */
-public abstract class ArrayTest extends AbstractStorageTest{
+public abstract class AbstractArrayTest extends AbstractStorageTest{
 
-    public ArrayTest(Storage storage) {
+    public AbstractArrayTest(Storage storage) {
         super(storage);
     }
 
