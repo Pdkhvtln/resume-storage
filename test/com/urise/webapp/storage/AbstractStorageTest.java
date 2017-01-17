@@ -16,16 +16,20 @@ public abstract class AbstractStorageTest {
     protected Storage storage;
 
     protected static final String UUID_1 = "uuid1";
-    protected Resume RESUME_1 = new Resume(UUID_1);
+    protected static final String FULL_NAME_1 = "First Man";
+    protected Resume RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
 
     protected static final String UUID_2 = "uuid2";
-    protected Resume RESUME_2 = new Resume(UUID_2);
+    protected static final String FULL_NAME_2 = "Second Man";
+    protected Resume RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
 
     protected static final String UUID_3 = "uuid3";
-    protected Resume RESUME_3 = new Resume(UUID_3);
+    protected static final String FULL_NAME_3 = "Third Man";
+    protected Resume RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
 
     protected static final String UUID_4 = "uuid4";
-    protected Resume RESUME_4 = new Resume(UUID_4);
+    protected static final String FULL_NAME_4 = "Fourth Man";
+    protected Resume RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
 
     @Before
     public void setUp() throws Exception {
@@ -74,7 +78,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void save() throws Exception {
         int sz = storage.size();
-        storage.save(new Resume(UUID_4));
+        storage.save(new Resume(UUID_4, FULL_NAME_4));
         assertSize(sz + 1);
         Assert.assertEquals(RESUME_4, storage.get(UUID_4));
     }
@@ -86,7 +90,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, FULL_NAME_1);
         storage.update(newResume);
         Assert.assertTrue(newResume == storage.get(UUID_1));
     }
@@ -112,7 +116,7 @@ public abstract class AbstractStorageTest {
         Assert.assertArrayEquals(copyStorage.toArray(), storage.getAllSorted().toArray());
     }
 
-    private void assertSize(int size) {
+    protected void assertSize(int size) {
         Assert.assertEquals(size, storage.size());
     }
 }

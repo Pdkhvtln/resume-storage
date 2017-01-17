@@ -10,7 +10,8 @@ import java.util.Comparator;
  * Created by Andrey on 06.01.2017.
  */
 public abstract class AbstractStorage implements Storage {
-    protected static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName()); //o1.getUuid().compareTo(o2.getUuid());
+    protected static final Comparator<Resume> FULL_NAME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName());
+    protected static final Comparator<Resume> UUID_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
 
     public Resume get(String uuid) {
         Object searchKey = getExistedSearchKey(uuid);
@@ -32,7 +33,7 @@ public abstract class AbstractStorage implements Storage {
         doDelete(searchKey);
     }
 
-    private Object getExistedSearchKey(String uuid) {
+    protected Object getExistedSearchKey(String uuid) {
         Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
@@ -40,7 +41,7 @@ public abstract class AbstractStorage implements Storage {
         return searchKey;
     }
 
-    private Object getNotExistedSearchKey(String uuid) {
+    protected Object getNotExistedSearchKey(String uuid) {
         Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             throw new ExistStorageException(uuid);
