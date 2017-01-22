@@ -2,19 +2,10 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Andrey on 17.01.2017.
  */
 public class MapFullNameStorage extends AbstractMapStorage {
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<Resume>(map.values());
-        result.sort(FULL_NAME_COMPARATOR);
-        return result;
-    }
 
     @Override
     protected void doSave(Resume r, Object searchKey) {

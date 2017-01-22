@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected Integer getSearchKey(String uuid) {
-        return Arrays.binarySearch(storage, 0, size, new Resume(uuid, ""), UUID_COMPARATOR);
+        return Arrays.binarySearch(storage, 0, size, new Resume(uuid, "dummy"), UUID_COMPARATOR);
     }
 
     @Override

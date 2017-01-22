@@ -51,17 +51,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//Storage {
         return size;
     }
 
-    public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<Resume>(Arrays.asList(Arrays.copyOf(storage, size)));
-        return list;
-    }
-
     public void clear() {
         if (size > 0)
             Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
+    @Override
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<Resume>(Arrays.asList(Arrays.copyOf(storage, size)));
+    }
 
     protected boolean isOverflow() {
         return (size == STORAGE_MAX_LENGTH);
