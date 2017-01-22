@@ -1,11 +1,12 @@
 package com.urise.webapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * com.urise.webapp.model.com.urise.webapp.model.Resume class
  */
-public class Resume {
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private final String uuid;
@@ -16,6 +17,8 @@ public class Resume {
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid most not be null");
+        Objects.requireNonNull(fullName, "fullName most not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -31,12 +34,15 @@ public class Resume {
 
         Resume resume = (Resume) o;
 
-        return uuid.equals(resume.uuid);
+        if (!uuid.equals(resume.uuid)) return false;
+        return fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
@@ -50,5 +56,11 @@ public class Resume {
 
     public String getFullName() {
         return fullName;
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        int cmp = this.fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : this.uuid.compareTo(o.uuid);
     }
 }
