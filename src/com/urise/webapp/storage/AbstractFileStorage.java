@@ -17,31 +17,34 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
-            throw new IllegalAccessException(directory.getAbsolutePath() + " is not directory")
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
         if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalAccessException(directory.getAbsolutePath() + " is not readable/writeable")
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writeable");
         }
         this.directory = directory;
     }
 
     @Override
-    public void clear() {//получить вс файлы и удалить их из каталога
-
+    public void clear() {
+        for (File file : directory.listFiles()) {
+            if (file.isFile())
+                file.delete();
+        }
     }
 
     @Override
     public int size() {//посчитать количество файлов в каталоге
-        return 0;
+        return directory.listFiles().length;
     }
 
     @Override
     protected void doSave(Resume r, File file) {
         try {
             file.createNewFile();
-            doWrite(r,file);
+            doWrite(r, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), IOException e);
+            throw new StorageException("IO error", file.getName(), e);
         }
     }
 
@@ -49,12 +52,17 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume r, File file) {//тоже что и в create только файл не надо создавать
-
+        try {
+            doWrite(r, file);
+        } catch (IOException e) {
+            throw new StorageException("IO error", file.getName(), e);
+        }
     }
 
     @Override
     protected void doDelete(File existedfile) {
-
+        if (existedfile.isFile())
+            existedfile.delete();
     }
 
     @Override
@@ -69,7 +77,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected File getSearchKey(String uuid) {
-        return new File(directory,uuid);
+        return new File(directory, uuid);
     }
 
     @Override
