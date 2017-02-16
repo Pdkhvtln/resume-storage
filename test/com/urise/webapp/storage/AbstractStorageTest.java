@@ -1,14 +1,17 @@
 package com.urise.webapp.storage;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
+import com.urise.webapp.utils.DateUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.*;
 
 /**
  * Created by Andrey on 02.01.2017.
@@ -18,7 +21,7 @@ public abstract class AbstractStorageTest {
 
     protected static final String UUID_1 = "uuid1";
     protected static final String FULL_NAME_1 = "First Man";
-    protected Resume RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+    protected Resume RESUME_1;
 
     protected static final String UUID_2 = "uuid2";
     protected static final String FULL_NAME_2 = "Second Man";
@@ -35,6 +38,39 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() throws Exception {
         storage.clear();
+        final Map<ContactType, String> CONTACTS_1 = new HashMap<>();
+        CONTACTS_1.put(ContactType.MAIL, "java@u-rise.com");
+        CONTACTS_1.put(ContactType.SKYPE, "grigory.kislin");
+
+        final Map<SectionType, Section> SECTIONS_1 = new HashMap<>();
+
+        //Добавляем ткстовую секцию
+        final Section TEXT_SECTION_1 = new TextSection("Аналитический склад ума, сильная логика, " +
+                "креативность, инициативность. Пурист кода и архитектуры.");
+        SECTIONS_1.put(SectionType.PERSONAL, TEXT_SECTION_1);
+
+        //добавляем секцию-список
+        final List<String> LIST_STRING_1 = new ArrayList<>();
+        LIST_STRING_1.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        LIST_STRING_1.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        LIST_STRING_1.add("DB:PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB)");
+        final Section LIST_SECTION_1 = new ListSection(LIST_STRING_1);
+        SECTIONS_1.put(SectionType.QUALIFICATIONS, LIST_SECTION_1);
+
+        //добавляем секцию организации
+        final List<Organization> SECTION_ORGANIZATIONS_1 = new ArrayList<>();
+        Position POSITION_1 =  new Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996,Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
+        Position POSITION_2 =  new Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993,Month.JANUARY), "Инженер", "Fortran, C");
+        List<Position> LIST_POSITION_1 = new ArrayList<>();
+        LIST_POSITION_1.add(POSITION_1);
+        LIST_POSITION_1.add(POSITION_2);
+        Organization ORGANIZATION_1 = new Organization("Санкт-Петербургский национальный " +
+                "исследовательский университет информационных технологий, механики и оптики","URL",LIST_POSITION_1);
+        SECTION_ORGANIZATIONS_1.add(ORGANIZATION_1);
+        SECTIONS_1.put(SectionType.EDUCATION, (Section) SECTION_ORGANIZATIONS_1);
+
+
+        RESUME_1 = new Resume(UUID_1, FULL_NAME_1, CONTACTS_1, SECTIONS_1);
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
