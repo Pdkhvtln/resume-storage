@@ -58,7 +58,6 @@ public abstract class AbstractStorageTest {
         SECTIONS_1.put(SectionType.QUALIFICATIONS, LIST_SECTION_1);
 
         //добавляем секцию организации
-
         Position POSITION_1 =  new Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996,Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
         Position POSITION_2 =  new Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993,Month.JANUARY), "Инженер", "Fortran, C");
         List<Position> LIST_POSITION_1 = new ArrayList<>();
