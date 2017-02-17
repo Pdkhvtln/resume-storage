@@ -58,7 +58,7 @@ public abstract class AbstractStorageTest {
         SECTIONS_1.put(SectionType.QUALIFICATIONS, LIST_SECTION_1);
 
         //добавляем секцию организации
-        final List<Organization> SECTION_ORGANIZATIONS_1 = new ArrayList<>();
+
         Position POSITION_1 =  new Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996,Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
         Position POSITION_2 =  new Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993,Month.JANUARY), "Инженер", "Fortran, C");
         List<Position> LIST_POSITION_1 = new ArrayList<>();
@@ -66,8 +66,11 @@ public abstract class AbstractStorageTest {
         LIST_POSITION_1.add(POSITION_2);
         Organization ORGANIZATION_1 = new Organization("Санкт-Петербургский национальный " +
                 "исследовательский университет информационных технологий, механики и оптики","URL",LIST_POSITION_1);
-        SECTION_ORGANIZATIONS_1.add(ORGANIZATION_1);
-        SECTIONS_1.put(SectionType.EDUCATION, (Section) SECTION_ORGANIZATIONS_1);
+        List<Organization> LIST_ORGANIZATIONS_1 = new ArrayList<>();
+        LIST_ORGANIZATIONS_1.add(ORGANIZATION_1);
+        Section ORGANIZATION_SECTION_1 = new OrganizationSection(LIST_ORGANIZATIONS_1);
+
+        SECTIONS_1.put(SectionType.EDUCATION, ORGANIZATION_SECTION_1);
 
 
         RESUME_1 = new Resume(UUID_1, FULL_NAME_1, CONTACTS_1, SECTIONS_1);
