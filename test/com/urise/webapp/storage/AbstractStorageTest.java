@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
@@ -9,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 
@@ -58,13 +56,10 @@ public abstract class AbstractStorageTest {
         SECTIONS_1.put(SectionType.QUALIFICATIONS, LIST_SECTION_1);
 
         //добавляем секцию организации
-        Position POSITION_1 =  new Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996,Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
-        Position POSITION_2 =  new Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993,Month.JANUARY), "Инженер", "Fortran, C");
-        List<Position> LIST_POSITION_1 = new ArrayList<>();
-        LIST_POSITION_1.add(POSITION_1);
-        LIST_POSITION_1.add(POSITION_2);
+        Organization.Position POSITION_1 =  new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996,Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
+        Organization.Position POSITION_2 =  new Organization.Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993,Month.JANUARY), "Инженер", "Fortran, C");
         Organization ORGANIZATION_1 = new Organization("Санкт-Петербургский национальный " +
-                "исследовательский университет информационных технологий, механики и оптики","URL",LIST_POSITION_1);
+                "исследовательский университет информационных технологий, механики и оптики","URL",POSITION_1, POSITION_2);
         List<Organization> LIST_ORGANIZATIONS_1 = new ArrayList<>();
         LIST_ORGANIZATIONS_1.add(ORGANIZATION_1);
         Section ORGANIZATION_SECTION_1 = new OrganizationSection(LIST_ORGANIZATIONS_1);
