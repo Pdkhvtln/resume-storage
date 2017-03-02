@@ -8,6 +8,8 @@ import java.util.Objects;
  * Created by andrew on 05.02.17.
  */
 public class OrganizationSection extends Section {
+    private static final long serialVersionUID = 1L;
+
     private final List<Organization> organizations;
 
     public OrganizationSection(Organization... organizations) {

@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.time.Month;
 import java.util.*;
 
@@ -15,6 +16,7 @@ import java.util.*;
  * Created by Andrey on 02.01.2017.
  */
 public abstract class AbstractStorageTest {
+    protected static final File STORAGEDIR = new File("/home/andrew/IdeaProjects/resume-storage/storage");
     protected Storage storage;
 
     protected static final String UUID_1 = "uuid1";
@@ -124,7 +126,7 @@ public abstract class AbstractStorageTest {
     public void update() throws Exception {
         Resume newResume = new Resume(UUID_1, FULL_NAME_1);
         storage.update(newResume);
-        Assert.assertTrue(newResume == storage.get(UUID_1));
+        Assert.assertTrue(newResume.equals(storage.get(UUID_1)));
     }
 
     @Test(expected = NotExistStorageException.class)
