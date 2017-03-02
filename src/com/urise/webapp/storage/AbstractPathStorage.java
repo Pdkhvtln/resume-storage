@@ -4,50 +4,49 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 /**
  * Created by andrew on 08.02.17.
  */
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private File directory;
+public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+    private Path directory;
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
     protected abstract Resume doRead(InputStream is) throws IOException;
 
-    protected AbstractFileStorage(File directory) {
+    protected AbstractPathStorage(String dir) {
+        directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
-        }
-        if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writeable");
+        if (!Files.isDirectory(directory) || Files.isWritable(directory)) {
+            throw new IllegalArgumentException(dir + " is not directory or is not writeable");
         }
         this.directory = directory;
     }
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null)
-            for (File file : files) {
-                doDelete(file);
-            }
+        try {
+            Files.list(directory).forEach(this::doDelete);
+        } catch (IOException e) {
+            throw new StorageException("Path delete error", null);
+        }
     }
 
     @Override
     public int size() {//посчитать количество файлов в каталоге
-        String[] list = directory.list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
+        try {
+            return (int)Files.size(directory);
+        } catch (IOException e) {
+            throw new StorageException("Path delete error", null);
         }
-        return list.length;
     }
 
-    @Override
+/*    @Override
     protected void doSave(Resume r, File file) {
         try {
             file.createNewFile();
@@ -104,4 +103,5 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
         return list;
     }
+    */
 }
