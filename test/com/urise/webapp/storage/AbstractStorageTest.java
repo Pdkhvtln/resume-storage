@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.time.Month;
 import java.util.*;
 
@@ -16,7 +17,10 @@ import java.util.*;
  * Created by Andrey on 02.01.2017.
  */
 public abstract class AbstractStorageTest {
-    protected static final File STORAGEDIR = new File("/home/andrew/IdeaProjects/resume-storage/storage");
+    protected static final String STORAGE_PATH = "/home/andrew/IdeaProjects/resume-storage/storage/";
+    protected static final File STORAGE_FILE = new File(STORAGE_PATH);
+
+
     protected Storage storage;
 
     protected static final String UUID_1 = "uuid1";
@@ -58,10 +62,10 @@ public abstract class AbstractStorageTest {
         SECTIONS_1.put(SectionType.QUALIFICATIONS, LIST_SECTION_1);
 
         //добавляем секцию организации
-        Organization.Position POSITION_1 =  new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996,Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
-        Organization.Position POSITION_2 =  new Organization.Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993,Month.JANUARY), "Инженер", "Fortran, C");
+        Organization.Position POSITION_1 = new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996, Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
+        Organization.Position POSITION_2 = new Organization.Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993, Month.JANUARY), "Инженер", "Fortran, C");
         Organization ORGANIZATION_1 = new Organization("Санкт-Петербургский национальный " +
-                "исследовательский университет информационных технологий, механики и оптики","URL",POSITION_1, POSITION_2);
+                "исследовательский университет информационных технологий, механики и оптики", "URL", POSITION_1, POSITION_2);
         List<Organization> LIST_ORGANIZATIONS_1 = new ArrayList<>();
         LIST_ORGANIZATIONS_1.add(ORGANIZATION_1);
         Section ORGANIZATION_SECTION_1 = new OrganizationSection(LIST_ORGANIZATIONS_1);

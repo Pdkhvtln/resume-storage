@@ -11,14 +11,10 @@ import java.util.Objects;
 /**
  * Created by andrew on 08.02.17.
  */
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends ObjectStreamStorage<File> {
     private File directory;
 
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
-    protected AbstractFileStorage(File directory) {
+    protected FileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");

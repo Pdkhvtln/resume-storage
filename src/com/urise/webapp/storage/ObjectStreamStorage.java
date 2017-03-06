@@ -8,20 +8,18 @@ import java.io.*;
 /**
  * Created by andrew on 01.03.17.
  */
-public class ObjectStreamStorage extends AbstractFileStorage {
+public abstract class ObjectStreamStorage<DIR> extends AbstractStorage<DIR> {
 
-    protected ObjectStreamStorage(File directory) {
+    /*protected ObjectStreamStorage(File directory) {
         super(directory);
-    }
+    }*/
 
-    @Override
     protected void doWrite(Resume r, OutputStream os) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(r);
         }
     }
 
-    @Override
     protected Resume doRead(InputStream is) throws IOException {
         try (ObjectInputStream ois = new ObjectInputStream(is)) {
             return (Resume) ois.readObject();
