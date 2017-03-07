@@ -89,4 +89,20 @@ public class Resume implements Comparable<Resume>, Serializable {
     public int hashCode() {
         return Objects.hash(uuid, fullName, contacts, sections);
     }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
+    public void addSection(SectionType type, Section section) {
+        sections.put(type, section);
+    }
 }

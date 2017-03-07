@@ -20,7 +20,7 @@ import static com.urise.webapp.utils.DateUtil.NOW;
  * Created by andrew on 05.02.17.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Organization implements Serializable{
+public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Link homePage;
@@ -38,6 +38,7 @@ public class Organization implements Serializable{
 
     public Organization() {
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -65,11 +66,19 @@ public class Organization implements Serializable{
                 '}';
     }
 
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
     /**
      * Created by andrew on 15.02.17.
      */
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class Position implements Serializable{
+    public static class Position implements Serializable {
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
@@ -99,6 +108,10 @@ public class Organization implements Serializable{
         public Position() {
         }
 
+        public Position(LocalDate startDate, String title, String description) {
+            this(startDate, DateUtil.NOW, title, description);
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -118,6 +131,22 @@ public class Organization implements Serializable{
         @Override
         public String toString() {
             return "Position{" + startDate + ',' + endDate + ',' + title + ',' + description + ')';
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
         }
     }
 }
