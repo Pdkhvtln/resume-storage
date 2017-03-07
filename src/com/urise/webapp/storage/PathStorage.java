@@ -2,24 +2,29 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.ObjectStreamSerializer;
+import com.urise.webapp.storage.serializer.StreamSerializer;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by andrew on 08.02.17.
  */
-public class PathStorage extends ObjectStreamStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
+    private StreamSerializer streamSerializer;
 
-    protected PathStorage(String dir) {
+    protected PathStorage(String dir, StreamSerializer streamSerializer) {
+        Objects.requireNonNull(dir, "directory must not be null");
+        this.streamSerializer = streamSerializer;
         directory = Paths.get(dir);
-        Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writeable");
         }
@@ -28,22 +33,13 @@ public class PathStorage extends ObjectStreamStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach((Path path) -> {
-                doDelete(path);
-            });
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        getFileList().forEach(this::doDelete);
     }
 
+
     @Override
-    public int size() {//посчитать количество файлов в каталоге
-        try {
-            return (int) Files.list(directory).count();//(int) Files.size(directory);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+    public int size() {
+        return (int) getFileList().count();
     }
 
     @Override
@@ -51,7 +47,7 @@ public class PathStorage extends ObjectStreamStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file " + path.toString(), path.getFileName().toString(), e);
+            throw new StorageException("Couldn't create path " + path.toString(), getFileName(path), e);
         }
         doUpdate(r, path);
     }
@@ -59,19 +55,18 @@ public class PathStorage extends ObjectStreamStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path path) {//тоже что и в create только файл не надо создавать
         try {
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
+            streamSerializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
         } catch (IOException e) {
-            throw new StorageException("File write error", r.getUuid());
+            throw new StorageException("Path write error", r.getUuid());
         }
     }
 
     @Override
     protected void doDelete(Path path) {
         try {
-            if (Files.exists(path))
-                Files.delete(path);
+            Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("File delete error", path.toFile().getName(), e);
+            throw new StorageException("Path delete error", getFileName(path), e);
         }
     }
 
@@ -79,9 +74,9 @@ public class PathStorage extends ObjectStreamStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
+            return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
         } catch (IOException e) {
-            throw new StorageException("File read error", path.toFile().getName(), e);
+            throw new StorageException("Path read error", getFileName(path), e);
         }
     }
 
@@ -92,26 +87,23 @@ public class PathStorage extends ObjectStreamStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Paths.get(directory.toString(), uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        /*
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory read error", null);
-        }*/
-        List<Resume> list = new ArrayList<>(size());
-        //for (File file : directory.listFiles())
-        try {
-            Files.list(directory).forEach((Path path) -> {
-                list.add(doGet(path));
-            });
-        } catch (IOException e) {
-            throw new StorageException("Path doCopyAll error", null, e);
-        }
-        return list;
+        return getFileList().map(this::doGet).collect(Collectors.toList());
     }
 
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
+
+    private Stream<Path> getFileList() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory read error", e);
+        }
+    }
 }
