@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.time.Month;
 import java.util.*;
 
@@ -29,51 +28,60 @@ public abstract class AbstractStorageTest {
 
     protected static final String UUID_2 = "uuid2";
     protected static final String FULL_NAME_2 = "Second Man";
-    protected Resume RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+    protected Resume RESUME_2;
 
     protected static final String UUID_3 = "uuid3";
     protected static final String FULL_NAME_3 = "Third Man";
-    protected Resume RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+    protected Resume RESUME_3;
 
-    protected static final String UUID_4 = "uuid4";
-    protected static final String FULL_NAME_4 = "Fourth Man";
-    protected Resume RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
+    protected static final String UUID_X = "uuid4";
+    protected static final String FULL_NAME_X = "Fourth Man";
+    protected Resume RESUME_X;
 
     @Before
     public void setUp() throws Exception {
         storage.clear();
-        final Map<ContactType, String> CONTACTS_1 = new HashMap<>();
-        CONTACTS_1.put(ContactType.MAIL, "java@u-rise.com");
-        CONTACTS_1.put(ContactType.SKYPE, "grigory.kislin");
 
-        final Map<SectionType, Section> SECTIONS_1 = new HashMap<>();
+        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+        RESUME_X = new Resume(UUID_X, FULL_NAME_X);
 
-        //Добавляем ткстовую секцию
-        final Section TEXT_SECTION_1 = new TextSection("Аналитический склад ума, сильная логика, " +
-                "креативность, инициативность. Пурист кода и архитектуры.");
-        SECTIONS_1.put(SectionType.PERSONAL, TEXT_SECTION_1);
+        RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
+        RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
+        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        RESUME_1.addSection(SectionType.EDUCATION,
+                new OrganizationSection(
+                        new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://URL1.com",
+                                new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996, Month.JANUARY), "Аспирантура", "Прогрммист C/C++"),
+                                new Organization.Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993, Month.JANUARY), "Инженер", "Fortran, C")
+                        )
+                )
+        );
 
-        //добавляем секцию-список
-        final List<String> LIST_STRING_1 = new ArrayList<>();
-        LIST_STRING_1.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        LIST_STRING_1.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
-        LIST_STRING_1.add("DB:PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB)");
-        final Section LIST_SECTION_1 = new ListSection(LIST_STRING_1);
-        SECTIONS_1.put(SectionType.QUALIFICATIONS, LIST_SECTION_1);
+        RESUME_1.addSection(SectionType.QUALIFICATIONS,
+                new ListSection(
+                        ("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"),
+                        ("Version control: Subversion, Git, Mercury, ClearCase, Perforce"),
+                        ("DB:PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB)")
+                )
+        );
 
-        //добавляем секцию организации
-        Organization.Position POSITION_1 = new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996, Month.JANUARY), "Аспирантура", "Прогрммист C/C++");
-        Organization.Position POSITION_2 = new Organization.Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993, Month.JANUARY), "Инженер", "Fortran, C");
-        Organization ORGANIZATION_1 = new Organization("Санкт-Петербургский национальный " +
-                "исследовательский университет информационных технологий, механики и оптики", "URL", POSITION_1, POSITION_2);
-        List<Organization> LIST_ORGANIZATIONS_1 = new ArrayList<>();
-        LIST_ORGANIZATIONS_1.add(ORGANIZATION_1);
-        Section ORGANIZATION_SECTION_1 = new OrganizationSection(LIST_ORGANIZATIONS_1);
+        RESUME_2.addContact(ContactType.MAIL, "email2@mail.ru");
+        RESUME_2.addContact(ContactType.SKYPE, "skype_us2");
+        RESUME_2.addSection(SectionType.PERSONAL, new TextSection("Personal data 2"));
 
-        SECTIONS_1.put(SectionType.EDUCATION, ORGANIZATION_SECTION_1);
+        RESUME_3.addContact(ContactType.MAIL, "email3@mail.ru");
+        RESUME_3.addContact(ContactType.SKYPE, "us_skype3");
+        RESUME_3.addSection(SectionType.PERSONAL, new TextSection("Personal data 3"));
+        RESUME_3.addSection(SectionType.EXPERIENCE,
+                new OrganizationSection(
+                        new Organization("Place work number 1", "http://URL3.com",
+                                new Organization.Position(DateUtil.of(2015, Month.JANUARY), "Аспирантура", "Прогрммист C/C++")
+                        )
+                )
+        );
 
-
-        RESUME_1 = new Resume(UUID_1, FULL_NAME_1, CONTACTS_1, SECTIONS_1);
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
@@ -116,9 +124,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void save() throws Exception {
         int sz = storage.size();
-        storage.save(new Resume(UUID_4, FULL_NAME_4));
+        storage.save(new Resume(UUID_X, FULL_NAME_X));
         assertSize(sz + 1);
-        Assert.assertEquals(RESUME_4, storage.get(UUID_4));
+        Assert.assertEquals(RESUME_X, storage.get(UUID_X));
     }
 
     @Test(expected = ExistStorageException.class)
