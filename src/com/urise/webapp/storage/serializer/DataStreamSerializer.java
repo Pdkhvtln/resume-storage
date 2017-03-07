@@ -4,6 +4,7 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class DataStreamSerializer implements StreamSerializer {
 
                 if (nameClass.equals("TextSection")) {
                     TextSection textSection = (TextSection) section;
-                    dos.writeUTF(textSection.getContent());
+                    dos.writeUTF(textSection.getContent());//content
                 }
 
                 if (nameClass.equals("ListSection")) {
@@ -43,7 +44,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     List<String> list = listSection.getItems();
                     dos.writeInt(list.size());
                     for (int i = 0; i < list.size(); i++) {
-                        dos.writeUTF(list.get(i));
+                        dos.writeUTF(list.get(i));//items
                     }
                 }
 
@@ -54,8 +55,8 @@ public class DataStreamSerializer implements StreamSerializer {
                     for (int i = 0; i < listOrganizations.size(); i++) {
 
                         Link homePage = listOrganizations.get(i).getHomePage();
-                        dos.writeUTF(homePage.getName());
-                        dos.writeUTF(homePage.getUrl());
+                        dos.writeUTF(homePage.getName());//name
+                        dos.writeUTF(homePage.getUrl());//url
 
                         List<Organization.Position> listPositions = listOrganizations.get(i).getPositions();
                         dos.writeInt(listPositions.size());
@@ -91,46 +92,35 @@ public class DataStreamSerializer implements StreamSerializer {
 
                 Section section = null;
                 if (nameClass.equals("TextSection")) {
-                    section = new TextSection(dis.readUTF());//dos.writeUTF(textSection.getContent());
+                    section = new TextSection(dis.readUTF());//content
                 }
                 if (nameClass.equals("ListSection")) {
                     int listSectionSize = dis.readInt();//dos.writeInt(list.size());
                     List<String> items = new ArrayList<>();
                     for (int j = 0; j < listSectionSize; j++) {
-                        items.add(dis.readUTF());//dos.writeUTF(list.get(i));
+                        items.add(dis.readUTF());//items
                     }
                     section = new ListSection(items);
                 }
                 if (nameClass.equals("OrganizationSection")) {
-                    section = new OrganizationSection();
+                    List<Organization> listOrganizations = new ArrayList<>();
+                    int listOrganizationsSize = dis.readInt();
+                    for (int j = 0; j < listOrganizationsSize; j++) {
+                        String Name = dis.readUTF();
+                        String Url = dis.readUTF();
+                        Link homePage = new Link(Name, Url);
+                        List<Organization.Position> listPositions = new ArrayList<>();
+                        int listPositionsSize = dis.readInt();
+                        for (int k = 0; k < listPositionsSize; k++) {
+                            listPositions.add(new Organization.Position(dis.readUTF(),dis.readUTF(),dis.readUTF(),dis.readUTF()));
+                        }
+                        Organization organization = new Organization(homePage, listPositions);
+                        listOrganizations.add(organization);
+                    }
+                    section = new OrganizationSection(listOrganizations);
                 }
                 resume.addSection(sectionType, section);
             }
-            //Map<SectionType, Section> sections = r.getSections();
-/*
-            if (nameClass.equals("OrganizationSection")) {
-                OrganizationSection organizations = (OrganizationSection) section;
-                List<Organization> listOrganizations = organizations.getOrganizations();
-                dos.writeInt(listOrganizations.size());
-                for (int i = 0; i < listOrganizations.size(); i++) {
-
-                    Link homePage = listOrganizations.get(i).getHomePage();
-                    dos.writeUTF(homePage.getName());
-                    dos.writeUTF(homePage.getUrl());
-
-                    List<Organization.Position> listPositions = listOrganizations.get(i).getPositions();
-                    dos.writeInt(listPositions.size());
-                    for (int j = 0; j < listPositions.size(); j++) {
-                        Organization.Position position = listPositions.get(j);
-                        dos.writeUTF(String.valueOf(position.getStartDate()));
-                        dos.writeUTF(String.valueOf(position.getEndDate()));
-                        dos.writeUTF(position.getTitle());
-                        dos.writeUTF(position.getDescription());
-                    }
-                }
-            }*/
-
-
             return resume;
         }
     }
