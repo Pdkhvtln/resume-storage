@@ -8,7 +8,10 @@ import java.util.Objects;
 public class TextSection extends Section{
     private static final long serialVersionUID = 1L;
 
-    private final String content;
+    private String content;
+
+    public TextSection() {
+    }
 
     public String getContent() {
         return content;
