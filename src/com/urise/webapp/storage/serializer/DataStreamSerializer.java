@@ -2,9 +2,11 @@ package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
+import com.urise.webapp.utils.DateUtil;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +114,10 @@ public class DataStreamSerializer implements StreamSerializer {
                         List<Organization.Position> listPositions = new ArrayList<>();
                         int listPositionsSize = dis.readInt();
                         for (int k = 0; k < listPositionsSize; k++) {
-                            listPositions.add(new Organization.Position(dis.readUTF(),dis.readUTF(),dis.readUTF(),dis.readUTF()));
+                            dis.readUTF();
+                            dis.readUTF();
+
+                            listPositions.add(new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996, Month.JANUARY),dis.readUTF(),dis.readUTF()));
                         }
                         Organization organization = new Organization(homePage, listPositions);
                         listOrganizations.add(organization);
