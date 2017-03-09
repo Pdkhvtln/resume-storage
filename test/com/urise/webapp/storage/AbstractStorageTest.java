@@ -34,8 +34,8 @@ public abstract class AbstractStorageTest {
     protected static final String FULL_NAME_3 = "Third Man";
     protected Resume RESUME_3;
 
-    protected static final String UUID_X = "uuid4";
-    protected static final String FULL_NAME_X = "Fourth Man";
+    protected static final String UUID_X = "uuidX";
+    protected static final String FULL_NAME_X = "X Man";
     protected Resume RESUME_X;
 
     @Before
@@ -53,8 +53,8 @@ public abstract class AbstractStorageTest {
         RESUME_1.addSection(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://URL1.com",
-                                new Organization.Position(DateUtil.of(1993, Month.JANUARY), DateUtil.of(1996, Month.JANUARY), "Аспирантура", "Прогрммист C/C++"),
-                                new Organization.Position(DateUtil.of(1987, Month.JANUARY), DateUtil.of(1993, Month.JANUARY), "Инженер", "Fortran, C")
+                                new Organization.Position(DateUtil.of(1993, Month.AUGUST), DateUtil.of(1996, Month.JULY), "Аспирантура", "Прогрммист C/C++"),
+                                new Organization.Position(DateUtil.of(1987, Month.APRIL), DateUtil.of(1993, Month.DECEMBER), "Инженер", "Fortran, C")
                         )
                 )
         );
@@ -77,7 +77,7 @@ public abstract class AbstractStorageTest {
         RESUME_3.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Place work number 1", "http://URL3.com",
-                                new Organization.Position(DateUtil.of(2015, Month.JANUARY), "Аспирантура", "Прогрммист C/C++")
+                                new Organization.Position(DateUtil.of(2015, Month.DECEMBER), "Аспирантура", "Прогрммист C/C++")
                         )
                 )
         );
