@@ -9,6 +9,6 @@ import com.urise.webapp.storage.serializer.XmlStreamSerializer;
 public class JsonPathStorageTest extends AbstractStorageTest {
 
     public JsonPathStorageTest() {
-        super(new PathStorage(STORAGE_PATH, new JsonStreamSerializer()));
+        super(new PathStorage(STORAGE_PATH.getAbsolutePath(), new JsonStreamSerializer()));
     }
 }

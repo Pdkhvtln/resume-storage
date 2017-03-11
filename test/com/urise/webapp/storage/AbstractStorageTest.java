@@ -3,6 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
+import com.urise.webapp.utils.Config;
 import com.urise.webapp.utils.DateUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,8 +17,8 @@ import java.util.*;
  * Created by Andrey on 02.01.2017.
  */
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_PATH = "/home/andrew/IdeaProjects/resume-storage/storage/";
-    protected static final File STORAGE_FILE = new File(STORAGE_PATH);
+    protected static File STORAGE_PATH = Config.getInstance().getStorageDir();//new File("/home/andrew/IdeaProjects/resume-storage/storage/");
+    //protected static final File STORAGE_FILE = new File(STORAGE_PATH);
 
 
     protected Storage storage;
@@ -47,7 +48,7 @@ public abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_X = new Resume(UUID_X, FULL_NAME_X);
 
-        RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
+ /*       RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
         RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
         RESUME_1.addSection(SectionType.EDUCATION,
@@ -81,7 +82,7 @@ public abstract class AbstractStorageTest {
                         )
                 )
         );
-
+*/
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);

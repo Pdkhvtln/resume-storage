@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {//Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_MAX_LENGTH = 10000;
     protected Resume[] storage = new Resume[STORAGE_MAX_LENGTH];
     protected int size = 0;
