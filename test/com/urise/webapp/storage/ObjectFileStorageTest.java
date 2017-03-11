@@ -8,6 +8,6 @@ import com.urise.webapp.storage.serializer.ObjectStreamSerializer;
 public class ObjectFileStorageTest extends AbstractStorageTest {
 
     public ObjectFileStorageTest() {
-        super(new FileStorage(STORAGE_FILE, new ObjectStreamSerializer()));
+        super(new FileStorage(STORAGE_PATH, new ObjectStreamSerializer()));
     }
 }
