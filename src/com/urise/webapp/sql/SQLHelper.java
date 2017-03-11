@@ -1,10 +1,9 @@
 package com.urise.webapp.sql;
 
-import com.urise.webapp.exception.StorageException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 
 /**
  * Created by andrew on 11.03.17.
@@ -18,12 +17,7 @@ public class SQLHelper {
     }
 
     public void execute(String sql) {
-        execute(sql, new SQLExecutor<Boolean>() {
-            @Override
-            public Boolean execute(PreparedStatement ps) throws SQLException {
-                return ps.execute();
-            }
-        });
+        execute(sql, PreparedStatement::execute);
     }
 
     public <T> T execute(String sql, SQLExecutor<T> executor) {
@@ -31,7 +25,7 @@ public class SQLHelper {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
         } catch (SQLException e) {
-            throw new StorageException(e);
+            throw ExceptionUtil.convertException(e);
         }
     }
 }

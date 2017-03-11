@@ -26,14 +26,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps ->
+        sqlHelper.<Void>execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps ->
         {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
             ps.execute();
             return null;
         });
-        //throw new ExistStorageException(r.getUuid());//StorageException(e);
     }
 
     @Override
@@ -52,18 +51,19 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.execute("DELETE FROM resume WHERE uuid = ?", ps ->
+        sqlHelper.execute("DELETE FROM resume WHERE uuid=?", ps ->
         {
             ps.setString(1, uuid);
-            ps.execute();
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
             return null;
         });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-//             PreparedStatement ps = connection.prepareStatement("SELECT * FROM resume r ORDER BY r.full_name, r.uuid")) {
-        sqlHelper.execute("SELECT * FROM resume r ORDER BY r.full_name, r.uuid", ps ->
+        return sqlHelper.execute("SELECT * FROM resume r ORDER BY r.full_name, r.uuid", ps ->
         {
             List<Resume> resumeList = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
@@ -72,7 +72,6 @@ public class SqlStorage implements Storage {
             }
             return resumeList;
         });
-        return null;
     }
 
     @Override
@@ -87,15 +86,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-//             PreparedStatement ps = connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
-        sqlHelper.<Void>execute("UPDATE resume set full_name = ? WHERE uuid = ?", ps ->
+        sqlHelper.<Void>execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps ->
         {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
             if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException("Resume doesn't exist " + r.getUuid());
-            }
-            else return null;
+                throw new NotExistStorageException(r.getUuid());
+            } else return null;
         });
     }
 }
