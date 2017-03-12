@@ -23,19 +23,19 @@ public abstract class AbstractStorageTest {
 
     protected Storage storage;
 
-    protected static final String UUID_1 = "uuid1";
+    protected static final String UUID_1 = "uuid1                               ";
     protected static final String FULL_NAME_1 = "First Man";
     protected Resume RESUME_1;
 
-    protected static final String UUID_2 = "uuid2";
+    protected static final String UUID_2 = "uuid2                               ";
     protected static final String FULL_NAME_2 = "Second Man";
     protected Resume RESUME_2;
 
-    protected static final String UUID_3 = "uuid3";
+    protected static final String UUID_3 = "uuid3                               ";
     protected static final String FULL_NAME_3 = "Third Man";
     protected Resume RESUME_3;
 
-    protected static final String UUID_X = "uuidX";
+    protected static final String UUID_X = "uuidX                               ";
     protected static final String FULL_NAME_X = "X Man";
     protected Resume RESUME_X;
 
@@ -48,7 +48,7 @@ public abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_X = new Resume(UUID_X, FULL_NAME_X);
 
- /*       RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
+        RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
         RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
         RESUME_1.addSection(SectionType.EDUCATION,
@@ -82,7 +82,7 @@ public abstract class AbstractStorageTest {
                         )
                 )
         );
-*/
+
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);

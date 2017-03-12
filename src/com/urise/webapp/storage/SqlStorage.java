@@ -2,8 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.sql.SQLHelper;
 
 import java.sql.*;
@@ -34,15 +33,9 @@ public class SqlStorage implements Storage {
                 ps.setString(2, r.getFullName());
                 ps.execute();
             }
-            try (PreparedStatement ps = conn.prepareStatement(("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
-                for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
-                    ps.setString(1, r.getUuid());
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
+            insertContact(conn, r);
+
+            insertSection(conn, r);
             return null;
         });
     }
@@ -64,7 +57,7 @@ public class SqlStorage implements Storage {
                     Resume r = new Resume(uuid, rs.getString("full_name"));
                     do {
                         String value = rs.getString("value");
-                        ContactType type = ContactType.GITHUB.valueOf(rs.getString("type"));
+                        ContactType type = ContactType.valueOf(rs.getString("type"));
                         r.addContact(type, value);
                     } while (rs.next());
                     return r;
@@ -108,13 +101,59 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        sqlHelper.<Void>execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps ->
-        {
-            ps.setString(1, r.getFullName());
-            ps.setString(2, r.getUuid());
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
-            } else return null;
+        sqlHelper.transactionalExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                ps.setString(1, r.getFullName());
+                ps.setString(2, r.getUuid());
+                ps.execute();
+                if (ps.executeUpdate() == 0) {
+                   throw new NotExistStorageException(r.getUuid());}
+            }
+            deleteContact(conn, r);
+            insertContact(conn, r);
+            return null;
         });
+    }
+
+    private void insertContact(Connection conn, Resume r) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
+            for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private void deleteContact(Connection conn, Resume r) {
+        sqlHelper.execute("DELETE FROM contact WHERE resume_uuid = ?", ps -> {
+            ps.setString(1, r.getUuid());
+            ps.execute();
+            return null;
+        });
+    }
+
+    private void insertSection(Connection conn, Resume r) throws SQLException {
+        try (PreparedStatement psSection = conn.prepareStatement("INSERT INTO section (resume_uuid, type) VALUES (?,?)")) {
+            for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
+                psSection.setString(1, r.getUuid());
+                psSection.setString(2, e.getKey().name());
+                psSection.addBatch();
+//                try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid = ?")) {
+//                    ps.setString(1, r.getUuid());
+//                    ResultSet rs = psSection.executeQuery();
+//                    while (rs.next()) {
+//                        try (PreparedStatement psTextSection = conn.prepareStatement("INSERT INTO text_section (section_id, content) VALUES (?, ?)")) {
+//                            psTextSection.setString(1, rs.getString("id"));
+//                            psTextSection.setString(2, ((TextSection) e.getValue()).getContent());
+//                            psTextSection.execute();
+//                        }
+//                    }
+//                }
+            }
+            psSection.executeBatch();
+        }
     }
 }
