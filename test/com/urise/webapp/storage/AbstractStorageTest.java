@@ -50,6 +50,13 @@ public abstract class AbstractStorageTest {
 
         RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
         RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
+        RESUME_2.addContact(ContactType.MAIL, "email2@mail.ru");
+        RESUME_2.addContact(ContactType.SKYPE, "skype_us2");
+        RESUME_3.addContact(ContactType.MAIL, "email3@mail.ru");
+        RESUME_3.addContact(ContactType.SKYPE, "us_skype3");
+
+
+/*
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
         RESUME_1.addSection(SectionType.EDUCATION,
                 new OrganizationSection(
@@ -68,12 +75,8 @@ public abstract class AbstractStorageTest {
                 )
         );
 
-        RESUME_2.addContact(ContactType.MAIL, "email2@mail.ru");
-        RESUME_2.addContact(ContactType.SKYPE, "skype_us2");
         RESUME_2.addSection(SectionType.PERSONAL, new TextSection("Personal data 2"));
 
-        RESUME_3.addContact(ContactType.MAIL, "email3@mail.ru");
-        RESUME_3.addContact(ContactType.SKYPE, "us_skype3");
         RESUME_3.addSection(SectionType.PERSONAL, new TextSection("Personal data 3"));
         RESUME_3.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
@@ -82,7 +85,7 @@ public abstract class AbstractStorageTest {
                         )
                 )
         );
-
+*/
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
@@ -113,7 +116,9 @@ public abstract class AbstractStorageTest {
     public void getAllSored() throws Exception {
         List<Resume> r = storage.getAllSorted();
         Assert.assertEquals(3, r.size());
-        Assert.assertEquals(r, Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
+        List<Resume> list= Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(list);
+        Assert.assertEquals(r, list);
     }
 
     @Test
@@ -138,6 +143,10 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() throws Exception {
         Resume newResume = new Resume(UUID_1, FULL_NAME_1);
+        RESUME_1.addContact(ContactType.MAIL, "update@u-rise.com");
+        RESUME_1.addContact(ContactType.SKYPE, "NEW_SKYPE");
+        RESUME_1.addContact(ContactType.PHONE, "+38 066 777 - 333 - 00");
+
         storage.update(newResume);
         Assert.assertTrue(newResume.equals(storage.get(UUID_1)));
     }
