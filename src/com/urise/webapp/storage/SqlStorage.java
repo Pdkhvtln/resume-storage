@@ -48,7 +48,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute("" +
+        Resume resume = sqlHelper.execute("" +
                         "SELECT * FROM resume r " +
                         "LEFT JOIN contact c " +
                         "ON r.uuid = c.resume_uuid " +
@@ -65,6 +65,21 @@ public class SqlStorage implements Storage {
                         addContact(rs, r);
                     } while (rs.next());
                     return r;
+                });
+        return sqlHelper.execute("" +
+                        "SELECT * FROM section s " +
+                        "WHERE resume_uuid = ?"
+                , ps ->
+                {
+                    ps.setString(1, uuid);
+                    ResultSet rs = ps.executeQuery();
+                    if (!rs.next()) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    do {
+                        addSection(rs, resume);
+                    } while (rs.next());
+                    return resume;
                 });
     }
 
@@ -219,6 +234,27 @@ public class SqlStorage implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             r.addContact(ContactType.valueOf(rs.getString("type")), value);
+        }
+    }
+
+    private void addSection(ResultSet rs, Resume r) throws SQLException {
+        String value = rs.getString("value");
+        SectionType st = SectionType.valueOf(rs.getString("type"));
+        if (st !=null){
+            switch (st) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    r.addSection(st, new TextSection(value));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    List<String> list = new ArrayList<>();
+                    for (String item : value.split("\n")) {
+                        list.add(item);
+                    }
+                    r.addSection(st, new ListSection(list));
+                    break;
+            }
         }
     }
 }
