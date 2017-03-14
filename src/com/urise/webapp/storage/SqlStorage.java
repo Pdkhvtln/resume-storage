@@ -176,6 +176,8 @@ public class SqlStorage implements Storage {
             }
             deleteContact(conn, r);
             insertContact(conn, r);
+            deleteSection(conn, r);
+            insertSection(conn, r);
             return null;
         });
     }
@@ -194,6 +196,13 @@ public class SqlStorage implements Storage {
 
     private void deleteContact(Connection conn, Resume r) {
         sqlHelper.execute("DELETE FROM contact WHERE resume_uuid = ?", ps -> {
+            ps.setString(1, r.getUuid());
+            ps.execute();
+            return null;
+        });
+    }
+    private void deleteSection(Connection conn, Resume r) {
+        sqlHelper.execute("DELETE FROM section WHERE resume_uuid = ?", ps -> {
             ps.setString(1, r.getUuid());
             ps.execute();
             return null;
