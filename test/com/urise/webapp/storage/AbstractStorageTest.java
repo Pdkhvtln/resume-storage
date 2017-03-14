@@ -18,8 +18,6 @@ import java.util.*;
  */
 public abstract class AbstractStorageTest {
     protected static File STORAGE_PATH = Config.getInstance().getStorageDir();//new File("/home/andrew/IdeaProjects/resume-storage/storage/");
-    //protected static final File STORAGE_FILE = new File(STORAGE_PATH);
-
 
     protected Storage storage;
 
