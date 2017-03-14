@@ -92,7 +92,7 @@ public class SqlStorage implements Storage {
             }
             return list;
         });
-        return sqlHelper.execute("SELECT * FROM contact c", ps ->
+        sqlHelper.execute("SELECT * FROM contact c", ps ->
         {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -101,6 +101,36 @@ public class SqlStorage implements Storage {
                     if (uuid.equals(resumes.get(i).getUuid())) {
                         Resume r = resumes.get(i);
                         r.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                        resumes.set(i, r);
+                    }
+                }
+            }
+            return null;
+        });
+        return sqlHelper.execute("SELECT * FROM section s", ps ->
+        {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String uuid = rs.getString("resume_uuid");
+                SectionType st = SectionType.valueOf(rs.getString("type"));
+                for (int i = 0; i < resumes.size(); i++) {
+                    if (uuid.equals(resumes.get(i).getUuid())) {
+                        Resume r = resumes.get(i);
+                        switch (st) {
+                            case PERSONAL:
+                            case OBJECTIVE:
+                                r.addSection(st, new TextSection(rs.getString("value")));
+                                break;
+                            case ACHIEVEMENT:
+                            case QUALIFICATIONS:
+                                String sValue = rs.getString("value");
+                                List<String> list = new ArrayList<>();
+                                for (String item : sValue.split("\n")) {
+                                    list.add(item);
+                                }
+                                r.addSection(st, new ListSection(list));
+                                break;
+                        }
                         resumes.set(i, r);
                     }
                 }
