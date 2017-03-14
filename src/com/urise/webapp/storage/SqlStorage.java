@@ -74,22 +74,30 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT * FROM resume r \n" +
-                "LEFT JOIN contact c ON r.uuid = c.resume_uuid\n" +
-                "ORDER BY full_name, uuid", ps ->//SELECT * FROM resume r ORDER BY r.full_name, r.uuid
+        List<Resume> resumes = sqlHelper.execute("SELECT * FROM resume r ORDER BY r.full_name, r.uuid", ps ->
         {
+            List<Resume> list = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
-            Map<String, Resume> map = new LinkedHashMap<>();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
-                Resume resume = map.get(uuid);
-                if (resume == null) {
-                    resume = new Resume(uuid, rs.getString("full_name"));
-                    map.put(uuid, resume);
-                }
-                addContact(rs, resume);
+                list.add(new Resume(uuid, rs.getString("full_name")));
             }
-            return new ArrayList<>(map.values());
+            return list;
+        });
+        return sqlHelper.execute("SELECT * FROM contact c", ps ->
+        {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String uuid = rs.getString("resume_uuid");
+                for (int i = 0; i <resumes.size() ; i++) {
+                    if (uuid.equals(resumes.get(i).getUuid())) {
+                        Resume r = resumes.get(i);
+                        r.addContact(ContactType.valueOf(rs.getString("type")),rs.getString("value"));
+                        resumes.set(i,r);
+                    }
+                }
+            }
+            return resumes;
         });
     }
 
@@ -140,6 +148,7 @@ public class SqlStorage implements Storage {
     }
 
     private void insertSection(Connection conn, Resume r) throws SQLException {
+        Map<String, String> idSection;
         try (PreparedStatement psSection = conn.prepareStatement("INSERT INTO section (resume_uuid, type) VALUES (?,?)")) {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
                 psSection.setString(1, r.getUuid());
@@ -159,6 +168,7 @@ public class SqlStorage implements Storage {
             }
             psSection.executeBatch();
         }
+
     }
 
     private void addContact(ResultSet rs, Resume r) throws SQLException {
