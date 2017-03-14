@@ -53,9 +53,19 @@ public abstract class AbstractStorageTest {
         RESUME_3.addContact(ContactType.MAIL, "email3@mail.ru");
         RESUME_3.addContact(ContactType.SKYPE, "us_skype3");
 
+        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("OBJECTIVE TEXT"));
+        RESUME_2.addSection(SectionType.PERSONAL, new TextSection("Personal data 2"));
+        RESUME_3.addSection(SectionType.PERSONAL, new TextSection("Personal data 3"));
+        RESUME_1.addSection(SectionType.QUALIFICATIONS,
+                new ListSection(
+                        ("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"),
+                        ("Version control: Subversion, Git, Mercury, ClearCase, Perforce"),
+                        ("DB:PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB)")
+                )
+        );
 
 /*
-        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
         RESUME_1.addSection(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://URL1.com",
@@ -65,17 +75,7 @@ public abstract class AbstractStorageTest {
                 )
         );
 
-        RESUME_1.addSection(SectionType.QUALIFICATIONS,
-                new ListSection(
-                        ("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"),
-                        ("Version control: Subversion, Git, Mercury, ClearCase, Perforce"),
-                        ("DB:PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB)")
-                )
-        );
 
-        RESUME_2.addSection(SectionType.PERSONAL, new TextSection("Personal data 2"));
-
-        RESUME_3.addSection(SectionType.PERSONAL, new TextSection("Personal data 3"));
         RESUME_3.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Place work number 1", "http://URL3.com",
