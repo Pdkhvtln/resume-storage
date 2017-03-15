@@ -16,10 +16,9 @@ CREATE UNIQUE INDEX contact_uuid_type_index ON contact (resume_uuid, type);
 
 CREATE TABLE section
 (
-  id INTEGER DEFAULT nextval('section_id_seq'::regclass) PRIMARY KEY NOT NULL,
+  id SERIAL PRIMARY KEY,
   type TEXT NOT NULL,
-  resume_uuid CHAR(36) NOT NULL,
+  resume_uuid CHAR(36) NOT NULL REFERENCES  resume (uuid) ON DELETE CASCADE,
   value TEXT NOT NULL,
-  CONSTRAINT section_resume_uuid_fk FOREIGN KEY (resume_uuid) REFERENCES resume (uuid)
 );
 CREATE UNIQUE INDEX section_type_uuid_index ON section (type, resume_uuid);
