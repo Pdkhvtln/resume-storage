@@ -14,7 +14,7 @@ import java.util.Properties;
  * Created by andrew on 11.03.17.
  */
 public class Config {
-    private static final File PROPERTIES_PATH = new File("config/resumes.properties");//./config/resumes.properties");
+    private static final File PROPERTIES_PATH = new File(getHomeDir(),"config/resumes.properties");
     private static final Config INSTANCE = new Config();
     private File storageDir;
     private Storage storage;
@@ -32,7 +32,7 @@ public class Config {
             Properties properties = new Properties();
             properties.load(is);
             storageDir = new File(properties.getProperty("storage.dir"));
-            storage = new SqlStorage(properties.getProperty("db.url"),properties.getProperty("db.user"),properties.getProperty("db.password"));
+            storage = new SqlStorage(properties.getProperty("db.url"), properties.getProperty("db.user"), properties.getProperty("db.password"));
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file" + PROPERTIES_PATH.getAbsolutePath());
         }
@@ -40,5 +40,14 @@ public class Config {
 
     public Storage getStorage() {
         return storage;
+    }
+
+    private static File getHomeDir() {
+        String prop = System.getProperty("homeDir");
+        File homeDir = new File(prop==null?".":prop);
+        if(!homeDir.isDirectory()){
+            throw new IllegalStateException(homeDir+" is not directory");
+        }
+        return homeDir;
     }
 }
