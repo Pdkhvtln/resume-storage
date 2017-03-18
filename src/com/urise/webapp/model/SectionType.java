@@ -21,4 +21,9 @@ public enum SectionType {
     public String getTitle() {
         return title;
     }
+
+    public String toHtml0(String value) {
+        return title + ": " + value;
+    }
+
 }
