@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.urise.webapp.model.*" %>
+<%@ page import="com.urise.webapp.utils.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -23,34 +24,73 @@
                     <%--<%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>--%>
         </c:forEach>
 
+    <hr>
+    <p>
+    <table cellpadding="2">
         <c:forEach var="sectionEntry" items="${resume.sections}">
-                <jsp:useBean id="sectionEntry"
-                             type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
-    <hr><h3><%=sectionEntry.getKey().getTitle()%></h3>
-        <% if (sectionEntry.getKey()==SectionType.PERSONAL || sectionEntry.getKey()==SectionType.OBJECTIVE){%>
-            <%=((TextSection) sectionEntry.getValue()).getContent()%><%}%>
-        <% if ((sectionEntry.getKey()==SectionType.ACHIEVEMENT) || (sectionEntry.getKey()==SectionType.QUALIFICATIONS)){%>
-        <ul>    <% for (String item : ((ListSection) sectionEntry.getValue()).getItems()) {%>
-            <li><%=item%></li>
-            <%}%>
-        </ul>
-        <%}%>
-        <% if ((sectionEntry.getKey()==SectionType.EDUCATION) || (sectionEntry.getKey()==SectionType.EXPERIENCE)){%>
-        <ul>
-        <% for (Organization organization : ((OrganizationSection) sectionEntry.getValue()).getOrganizations()) {%>
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
+            <c:set var="type" value="${sectionEntry.key}"/>
+            <c:set var="section" value="${sectionEntry.value}"/>
+                <jsp:useBean id="section"
+                             type="com.urise.webapp.model.Section"/>
+            <tr>
+                <td><h3><a name="type.name">${type.title}</a></h3></td>
+                <c:if test="${type=='OBJECTIVE'}">
+                    <td>
+                        <h3><%=((TextSection) section).getContent()%></h3>
+                    </td>
+                </c:if>
+            </tr>
+            <c:if test="${type!='OBJECTIVE'}">
+                <c:choose>
+                    <c:when test="${type=='PERSONAL'}">
+                        <tr>
+                            <td>
+                                <%=((TextSection) section).getContent()%>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${type=='QUALIFICATIONS' || type=='ACHIEVEMENT'}">
+                        <tr>
+                            <td>
+                                <ul>
+                                    <c:forEach var="item" items="<%=((ListSection) section).getItems()%>">
+                                        <li>${item}</li>
+                                    </c:forEach>
+                                </ul>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                        <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>">
+                            <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty org.homePage.url}">
+                                            <h3>${org.homePage}.url</h3>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <h3><a href="${org.homePage.url}">${org.homePage.name}</a></h3>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                            <c:forEach var="position" items="${position.description}">
+                                <jsp:useBean id="position" type="com.urise.webapp.model.Organization.Position"/>
+                                <tr>
+                                    <td><%=HtmlUtil.formatDates(position)%></td>
+                                    <td><b>${position.title}</b><br>${position.description}</td>
+                                </tr>
+                            </c:forEach>
+                        </c:forEach>
+                    </c:when>
+                </c:choose>
+            </c:if>
+        </c:forEach>
+    </table>
+    <button onclick="window.history.back()">OK</button>
 
-        <li><a href=<%=organization.getHomePage().getUrl()%>><%=organization.getHomePage().getName()%></a><br/>
-            <% for (Organization.Position position : organization.getPositions()) {%>
-            <i><%=position.getStartDate()%>-<%=position.getEndDate()%></i>: <b><%=position.getTitle()%></b><br/>
-            <%=position.getDescription()%><br/><br/>
-            <%}%>
-        </li>
-        <%}%>
-        </ul>
-
-        <%}%>
-
-    </c:forEach>
     </p>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

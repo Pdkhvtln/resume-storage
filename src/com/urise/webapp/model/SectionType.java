@@ -4,8 +4,8 @@ package com.urise.webapp.model;
  * Created by andrew on 30.01.17.
  */
 public enum SectionType {
-    PERSONAL("Личные качества"),
     OBJECTIVE("Позиция"),
+    PERSONAL("Личные качества"),
     ACHIEVEMENT("Достижения"),
     QUALIFICATIONS("Квалификация"),
     EXPERIENCE("Опыт работы"),
@@ -13,8 +13,7 @@ public enum SectionType {
 
     private String title;
 
-    SectionType(String title)
-    {
+    SectionType(String title) {
         this.title = title;
     }
 
