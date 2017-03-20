@@ -1,12 +1,9 @@
 package com.urise.webapp.storage.serializer;
 
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
-import com.urise.webapp.utils.DateUtil;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,7 @@ public class DataStreamSerializer implements StreamSerializer {
             for (int i = 0; i < size; i++) {
                 ContactType contactType = ContactType.valueOf(dis.readUTF());
                 String value = dis.readUTF();
-                resume.addContact(contactType, value);
+                resume.setContact(contactType, value);
             }
             //TODO implements sections
             int sectionsSize = dis.readInt();
@@ -125,7 +122,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     }
                     section = new OrganizationSection(listOrganizations);
                 }
-                resume.addSection(sectionType, section);
+                resume.setSection(sectionType, section);
             }
             return resume;
         }

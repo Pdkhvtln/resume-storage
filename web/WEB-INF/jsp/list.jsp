@@ -13,6 +13,8 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
+    <a href="resume?action=add"><img src="img/add.png" alt="ADD"></a>
+    <br>
     <table border="1" cellpadding="8" cellspasing="0">
         <tr>
             <th>Имя</th>

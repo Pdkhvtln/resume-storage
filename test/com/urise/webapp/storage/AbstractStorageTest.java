@@ -4,13 +4,11 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.utils.Config;
-import com.urise.webapp.utils.DateUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.time.Month;
 import java.util.*;
 
 import static com.urise.webapp.TestData.*;
@@ -86,9 +84,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() throws Exception {
         Resume newResume = new Resume(UUID_1, FULL_NAME_1);
-        RESUME_1.addContact(ContactType.MAIL, "update@u-rise.com");
-        RESUME_1.addContact(ContactType.SKYPE, "NEW_SKYPE");
-        RESUME_1.addContact(ContactType.PHONE, "+38 066 777 - 333 - 00");
+        RESUME_1.setContact(ContactType.MAIL, "update@u-rise.com");
+        RESUME_1.setContact(ContactType.SKYPE, "NEW_SKYPE");
+        RESUME_1.setContact(ContactType.PHONE, "+38 066 777 - 333 - 00");
 
         storage.update(newResume);
         Assert.assertTrue(newResume.equals(storage.get(UUID_1)));

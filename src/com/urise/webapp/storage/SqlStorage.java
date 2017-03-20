@@ -4,8 +4,6 @@ import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.sql.SQLHelper;
 import com.urise.webapp.utils.JsonParser;
-import jdk.nashorn.internal.parser.JSONParser;
-import sun.nio.ch.SelChImpl;
 
 import java.sql.*;
 import java.util.*;
@@ -193,7 +191,7 @@ public class SqlStorage implements Storage {
     private void addContact(ResultSet rs, Resume r) throws SQLException {
         String value = rs.getString("value");
         if (value != null) {
-            r.addContact(ContactType.valueOf(rs.getString("type")), value);
+            r.setContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
 
@@ -201,7 +199,7 @@ public class SqlStorage implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             SectionType st = SectionType.valueOf(rs.getString("type"));
-            r.addSection(st, JsonParser.read(value, Section.class));
+            r.setSection(st, JsonParser.read(value, Section.class));
         }
     }
 }

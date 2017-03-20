@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class OrganizationSection extends Section {
     private static final long serialVersionUID = 1L;
-
+    public static final OrganizationSection EMPTY = new OrganizationSection();
     private List<Organization> organizations;
 
     public OrganizationSection(Organization... organizations) {
