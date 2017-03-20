@@ -5,9 +5,9 @@ import java.util.Objects;
 /**
  * Created by andrew on 05.02.17.
  */
-public class TextSection extends Section{
+public class TextSection extends Section {
     private static final long serialVersionUID = 1L;
-
+    public static final TextSection EMPTY = new TextSection("");
     private String content;
 
     public TextSection() {
@@ -18,7 +18,7 @@ public class TextSection extends Section{
     }
 
     public TextSection(String content) {
-        Objects.requireNonNull(content,"content must be not null");
+        Objects.requireNonNull(content, "content must be not null");
         this.content = content;
     }
 

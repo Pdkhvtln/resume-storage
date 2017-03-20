@@ -1,12 +1,8 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.*;
-import com.urise.webapp.storage.Storage;
-import com.urise.webapp.utils.Config;
 import com.urise.webapp.utils.DateUtil;
-import org.junit.Before;
 
-import java.io.File;
 import java.time.Month;
 import java.util.UUID;
 
@@ -37,18 +33,18 @@ static {
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_X = new Resume(UUID_X, FULL_NAME_X);
 
-        RESUME_1.addContact(ContactType.MAIL, "java@u-rise.com");
-        RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
-        RESUME_2.addContact(ContactType.MAIL, "email2@mail.ru");
-        RESUME_2.addContact(ContactType.SKYPE, "skype_us2");
-        RESUME_3.addContact(ContactType.MAIL, "email3@mail.ru");
-        RESUME_3.addContact(ContactType.SKYPE, "us_skype3");
+        RESUME_1.setContact(ContactType.MAIL, "java@u-rise.com");
+        RESUME_1.setContact(ContactType.SKYPE, "grigory.kislin");
+        RESUME_2.setContact(ContactType.MAIL, "email2@mail.ru");
+        RESUME_2.setContact(ContactType.SKYPE, "skype_us2");
+        RESUME_3.setContact(ContactType.MAIL, "email3@mail.ru");
+        RESUME_3.setContact(ContactType.SKYPE, "us_skype3");
 
-        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("OBJECTIVE TEXT"));
-        RESUME_2.addSection(SectionType.PERSONAL, new TextSection("Personal data 2"));
-        RESUME_3.addSection(SectionType.PERSONAL, new TextSection("Personal data 3"));
-        RESUME_1.addSection(SectionType.QUALIFICATIONS,
+        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("OBJECTIVE TEXT"));
+        RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Personal data 2"));
+        RESUME_3.setSection(SectionType.PERSONAL, new TextSection("Personal data 3"));
+        RESUME_1.setSection(SectionType.QUALIFICATIONS,
                 new ListSection(
                         ("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"),
                         ("Version control: Subversion, Git, Mercury, ClearCase, Perforce"),
@@ -56,7 +52,7 @@ static {
                 )
         );
 
-        RESUME_1.addSection(SectionType.EDUCATION,
+        RESUME_1.setSection(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://URL1.com",
                                 new Organization.Position(DateUtil.of(1993, Month.AUGUST), DateUtil.of(1996, Month.JULY), "Аспирантура", "Прогрммист C/C++"),
@@ -66,7 +62,7 @@ static {
         );
 
 
-        RESUME_3.addSection(SectionType.EXPERIENCE,
+        RESUME_3.setSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Place work number 1", "http://URL3.com",
                                 new Organization.Position(DateUtil.of(2015, Month.DECEMBER), "Аспирантура", "Прогрммист C/C++")
